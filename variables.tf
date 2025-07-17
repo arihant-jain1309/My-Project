@@ -9,3 +9,7 @@ variable "azs" {
   type = list(string)
 }
 
+variable "bucket_name" {}
+
+variable "cluster_name" {}
+variable "cluster_version" {}
