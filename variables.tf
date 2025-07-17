@@ -13,3 +13,9 @@ variable "bucket_name" {}
 
 variable "cluster_name" {}
 variable "cluster_version" {}
+
+variable "db_user" {}
+variable "db_pass" {
+  sensitive = true
+}
+

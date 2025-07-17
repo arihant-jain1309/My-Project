@@ -8,3 +8,7 @@ bucket_name = "my-demo-bucket-arihant123"
 
 cluster_name = "my-eks-cluster"
 cluster_version = "1.27"
+
+db_user = "admin"
+db_pass = "ArihantStrongPassword123"
+
