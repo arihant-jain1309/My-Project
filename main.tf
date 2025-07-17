@@ -12,10 +12,21 @@ module "s3" {
 }
 
 module "eks"  {
-  source = "./modules/eks"
-  cluster_name = var.cluster_name
+  source  = "terraform-aws-modules/eks/aws"
+  version = "20.8.4"  # ✅ Stable version
+  cluster_name    = var.cluster_name  
   cluster_version = var.cluster_version
   subnet_ids = module.vpc.public_subnet_ids
+
+  eks_managed_node_groups = {
+    default = {
+      instance_types = ["t3.medium"]
+      min_size       = 1
+      max_size       = 2
+      desired_size   = 1
+    }
+  }
+  enable_irsa  = true
 }
 
 module "rds" {
@@ -23,7 +34,7 @@ module "rds" {
   username = var.db_user
   password = var.db_pass
   db_sg_id = aws_security_group.rds_sg.id
-    private_subnet_ids = module.vpc.private_ids
+    private_subnet_ids = module.vpc.private_subnet_ids
 }
 
 resource "aws_security_group" "rds_sg" {
@@ -36,7 +47,7 @@ resource "aws_security_group" "rds_sg" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [module.eks.node_security_group_id]
+    security_groups = [module.eks.cluster_primary_security_group_id]
   }
 
   egress {
